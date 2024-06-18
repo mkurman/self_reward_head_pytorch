@@ -94,7 +94,7 @@ class AnyModelForCausalLM(AnyModel):
 
         if labels is not None:
             # This is the most important part of the training phase.
-            reward_output, reward_labels = self.rewarding_lm_head(input_ids, outputs[0])
+            reward_output, reward_labels = self.rewarding_lm_head(input_ids, logits)
 
             # calc causal loss
             loss_fct = nn.CrossEntropyLoss(reduction='mean')
