@@ -47,7 +47,7 @@ class SelfRewardHead(nn.Module):
             reward_outputs = torch.stack(reward_outputs)
             reward_labels = torch.stack(reward_labels)
 
-        reward_output = self.rewarding_lm_head(reward_outputs)
+        reward_output = self.reward_head(reward_outputs)
 
         return reward_output, reward_labels
 
