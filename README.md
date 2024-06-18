@@ -14,7 +14,7 @@ Improved output quality: By iteratively scoring and refining its outputs, the mo
 To install the self-reward head, clone the repository and follow the installation instructions in the README.
 
 sh
-git clone [https://github.com/yourusername/self-reward-head](https://github.com/mkurman/self_reward_head_pytorch)
+git clone [https://github.com/mkurman/self_reward_head_pytorch](https://github.com/mkurman/self_reward_head_pytorch)
 cd self-reward-head-pytorch
 
 ## Usage
