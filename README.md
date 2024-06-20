@@ -30,3 +30,14 @@ I welcome contributions!
 ## License
 
 This project is licensed under the Apache 2.0 License.
+
+## Citation
+If you use this codebase, or otherwise found my work valuable, please cite:
+
+```
+@inproceedings{self_reward_head_pytorch,
+  title={Self Reward Head: Autonomous evaluation of model results to self-improve its efficiency},
+  author={Mariusz Kurman @ MedIT Solutions Kurman i Wspolnicy Sp. z o. o.},
+  year={2024}
+}
+```
