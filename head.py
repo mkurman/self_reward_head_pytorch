@@ -23,7 +23,10 @@ class SelfRewardHead(nn.Module):
             reward_outputs = []
             reward_labels = []
             for i in range(input_ids.shape[0]):
-                output_to_choose = random.randint(0, 1)
+                if output is None:
+                    output_to_choose = 1
+                else:
+                    output_to_choose = random.randint(0, 1)
 
                 if output_to_choose == 0:
                     reward_input = output.argmax(dim=-1)
