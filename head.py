@@ -25,13 +25,18 @@ class SelfRewardHead(nn.Module):
             for i in range(input_ids.shape[0]):
                 output_to_choose = random.randint(0, 1)
 
-                if output is not None and output_to_choose == 0:
+                if output_to_choose == 0:
                     reward_input = output.argmax(dim=-1)
                 else:
                     reward_input = input_ids
-                    output_to_choose = 1
+                    output_to_choose = 1.
 
                 reward_input = self.model.embeddings(torch.stack([reward_input[i]]))[0]
+
+                if output_to_choose == 0:
+                    similarity_score = nn.CosineSimilarity(dim=1, eps=1e-6)
+                    reward_input_gold = self.model.embeddings(torch.stack([input_ids[i]]))[0]
+                    output_to_choose = similarity_score(reward_input, reward_input_gold)[0].detach().cpu().numpy()
 
                 s, d = reward_input.size()
                 mask = torch.ones((s, s), dtype=torch.bool, device=reward_input.device).triu(1)
