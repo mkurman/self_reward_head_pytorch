@@ -17,7 +17,7 @@ class SelfRewardHead(nn.Module):
         # You can use the LinearMoE implementation from my repository: https://github.com/mkurman/linearmoe_pytorch
         self.reward_head = nn.Linear(in_features, out_features, bias=bias)
 
-    def forward(self, input_ids: torch.FloatTensor, output: Optional[torch.FloatTensor] = None) -> tuple[
+    def forward(self, embedding_module: nn.Module, input_ids: torch.FloatTensor, output: Optional[torch.FloatTensor] = None) -> tuple[
         torch.FloatTensor, torch.FloatTensor]:
         with torch.no_grad():
             reward_outputs = []
@@ -31,11 +31,11 @@ class SelfRewardHead(nn.Module):
                     reward_input = input_ids
                     output_to_choose = 1.
 
-                reward_input = self.model.embeddings(torch.stack([reward_input[i]]))[0]
+                reward_input = embedding_module(torch.stack([reward_input[i]]))[0]
 
                 if output_to_choose == 0:
                     similarity_score = nn.CosineSimilarity(dim=1, eps=1e-6)
-                    reward_input_gold = self.model.embeddings(torch.stack([input_ids[i]]))[0]
+                    reward_input_gold = embedding_module(torch.stack([input_ids[i]]))[0]
                     output_to_choose = similarity_score(reward_input, reward_input_gold)[0].detach().cpu().numpy()
 
                 s, d = reward_input.size()
@@ -98,8 +98,9 @@ class AnyModelForCausalLM(AnyModel):
         loss = None
 
         if labels is not None:
-            # This is the most important part of the training phase.
-            reward_output, reward_labels = self.rewarding_lm_head(input_ids, logits)
+            # This is the most important part of the training phase. It calculates the loss and the self-reward loss
+            # Provide embeddings layer and input_ids as the "ground truth", and the model outputs as "logits" to the rewarding_lm_head
+            reward_output, reward_labels = self.rewarding_lm_head(self.model.embeddings, input_ids, logits)
 
             # calc causal loss
             loss_fct = nn.CrossEntropyLoss(reduction='mean')
