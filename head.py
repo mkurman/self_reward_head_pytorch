@@ -39,7 +39,8 @@ class SelfRewardHead(nn.Module):
                 if output_to_choose == 0:
                     similarity_score = nn.CosineSimilarity(dim=1, eps=1e-6)
                     reward_input_gold = embedding_module(torch.stack([input_ids[i]]))[0]
-                    output_to_choose = similarity_score(reward_input, reward_input_gold)[0].detach().cpu().numpy()
+                    output_to_choose = similarity_score(reward_input, reward_input_gold)[0]
+                    output_to_choose = torch.clamp(output_to_choose, 0, 1).cpu().numpy()
 
                 s, d = reward_input.size()
                 mask = torch.ones((s, s), dtype=torch.bool, device=reward_input.device).triu(1)
