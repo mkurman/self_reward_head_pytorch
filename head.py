@@ -129,7 +129,7 @@ class AnyModelForCausalLM(AnyModel):
 
             loss_labels = loss_labels.to(loss_logits.device)
 
-            reward_loss = loss_fct(loss_logits, loss_labels)
+            reward_loss = loss_fct(F.sigmoid(loss_logits), loss_labels)
 
             # sum losses
             loss = loss + reward_loss
