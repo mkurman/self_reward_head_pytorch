@@ -120,8 +120,6 @@ class AnyModelForCausalLM(AnyModel):
             # calc self reward loss
             loss_fct = nn.BCEWithLogitsLoss(reduction='mean')
 
-            reward_output = F.sigmoid(reward_output)
-
             loss_logits = reward_output[..., :].contiguous()
             loss_labels = reward_labels[..., :].contiguous()
 
